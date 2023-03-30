@@ -488,7 +488,10 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
               labelType, bounds, annotationElement, labelElement);
 
           if (labelPoint != null) {
-            canvas.drawText(labelElement, labelPoint.x, labelPoint.y,
+            canvas.drawText(
+                labelElement,
+                labelPoint.x,
+                (labelPoint.y - ((annotationElement.labelDirection == AnnotationLabelDirection.vertical && annotationElement.labelPosition == AnnotationLabelPosition.margin && labelElement.maxWidth!=null)?(labelElement.maxWidth!/1.5).toInt():0)),
                 rotation: rotation);
           }
         });
@@ -556,8 +559,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         _resolveAutoLabelPosition(bounds, annotationElement, labelElement);
 
     if (annotationElement.labelPosition == AnnotationLabelPosition.margin &&
-        annotationElement.annotation.axisType ==
-            RangeAnnotationAxisType.measure) {
+        annotationElement.annotation.axisType == RangeAnnotationAxisType.measure)
+    {
       switch (annotationElement.annotation.axisType) {
         case RangeAnnotationAxisType.domain:
           break;
@@ -569,7 +572,9 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
               break;
 
             case AnnotationLabelAnchor.end:
-              maxWidth = chart!.marginRight - labelPadding;
+              if (annotationElement.labelDirection ==
+      AnnotationLabelDirection.vertical) maxWidth = labelElement.measurement.horizontalSliceWidth;
+              else maxWidth = chart!.marginRight - labelPadding;
               break;
 
             case AnnotationLabelAnchor.middle:
